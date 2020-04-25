@@ -47,9 +47,33 @@
                                     <button type="button" class="btn btn-warning">
                                         <i class="fa fa-info"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger">
+                                    <button type="button" data-toggle="modal" data-target="#exampleModalCenter-{{$user->id}}" class="btn btn-danger  ">
                                         <i class="fa fa-ban"></i>
                                     </button>
+                                    <div class="modal fade" id="exampleModalCenter-{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle" style="display: inline-block;">Bạn có chắc chắn xóa ko?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h4>Bạn chắc chắn muốn xóa?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <form style="display: inline-block;" action="" method="post" accept-charset="utf-8">
+                                                        @csrf
+
+                                                        <button type="button" name="{{$user->id}}" class="btn btn-danger btnBanUser">Đồng ý</button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
 
                             </tr>
@@ -119,6 +143,7 @@
                 $(".print-error-msg").find("ul").append('<li>' + value + '</li>');
             });
         }
+        // edit
         $('.btnEditUser').on("click", function() {
 
             var id = $(this).attr('name');
@@ -135,9 +160,8 @@
                         formData.append('id', $('input[name="id"]').val());
                         formData.append('name', $('input[name="nameEdit"]').val());
                         formData.append('phone', $('input[name="phoneEdit"]').val());
-                        formData.append('password', $('input[name="passwordEdit"]').val());
-                        formData.append('address', $('input[name="address"]').val());
-                        formData.append('avatar', $('input[type=file]')[0].files[0]);
+                        formData.append('address', $('input[name="addressEdit"]').val());
+                        formData.append('avatar', $('input[type=file]')[1].files[0]);
                         $.ajax({
                             type: "POST",
                             url: "{{route('admin.user.update')}}",
@@ -145,19 +169,19 @@
                             processData: false,
                             contentType: false,
                             success: function(data) {
-                                // if ($.isEmptyObject(data.error)) {
-                                //     $.ajax({
-                                //         type: "GET",
-                                //         url: "{{route('admin.user.index')}}",
-                                //         success: function(data) {
-                                //             $('.list_user').prepend('<tr><td>' + name + '</td><td>' + email + '</td><td>Vừa xong</td><td><button type="button" class="btn btn-success"><i class="fa fa-edit"></i> </button><button type="button" class="btn btn-warning"><i class="fa fa-info"></i> </button><button type="button" class="btn btn-danger"><i class="fa fa-ban"></i></button></td></tr>')
-                                //         }
-                                //     });
-                                    
-                                // } else {
-                                //     printErrorMsg(data.error);
-                                // }
-                                alert('ok')
+                                if ($.isEmptyObject(data.error)) {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "{{route('admin.user.index')}}",
+                                        success: function(data) {
+                                            location.reload();
+                                        }
+                                    });
+
+                                } else {
+                                    printErrorMsg(data.error);
+                                }
+                    
 
                             },
                             error: function(error) {
@@ -168,6 +192,27 @@
                 }
             });
         });
+        // del
+        $('.btnBanUser').on('click', function() {
+            var id = $(this).attr('name');
+            var formData = new FormData();
+            formData.append('_token', $('input[name="_token"]').val());
+            formData.append('id', id);
+            $.ajax({
+                type: "POST",
+                url: "{{route('admin.user.del')}}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    location.reload();
+
+                },
+                error: function(error) {
+                    alert('lỗi')
+                }
+            });
+        })
     });
 </script>
 @endsection

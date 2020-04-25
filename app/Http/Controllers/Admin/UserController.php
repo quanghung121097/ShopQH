@@ -21,10 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        
-            $users = User::orderBy('updated_at', 'desc')->paginate(5);
-            return view('admins.user.user', compact('users'));
-        
+
+        $users = User::where('deleted_at', NULL)->orderBy('updated_at', 'desc')->paginate(5);
+        return view('admins.user.user', compact('users'));
     }
     /**
      * Show the form for creating a new resource.
@@ -44,21 +43,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),
-         [
-            'name'         => 'required|max:255|min:5',
-            'email'   => 'required|email|unique:users,email',
-            'password'   =>  'required|min:8',
-            'avatar' => 'required|image|max:2000',
-         ],
-         [
-            'required' => ':attribute Không được để trống',
-            'min' => ':attribute Không được nhỏ hơn :min ký tự',
-            'max' => ':attribute Không được lớn hơn :max ký tự',
-            'unique' => 'email này đã được sử dụng',
-        ],
-        
-    );
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name'         => 'required|max:255|min:5',
+                'email'   => 'required|email|unique:users,email',
+                'password'   =>  'required|min:8',
+                'avatar' => 'required|image|max:2000',
+            ],
+            [
+                'required' => ':attribute Không được để trống',
+                'min' => ':attribute Không được nhỏ hơn :min ký tự',
+                'max' => ':attribute Không được lớn hơn :max ký tự',
+                'unique' => 'email này đã được sử dụng',
+            ],
+
+        );
         if ($validator->passes()) {
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
@@ -74,15 +74,15 @@ class UserController extends Controller
             $user->email = $request->get('email');
             $user->phone = $request->get('phone');
             $user->password = bcrypt($request->get('password'));
-            $user->created_at=\Carbon\Carbon::now('Asia/Ho_Chi_Minh');
-            $user->updated_at=\Carbon\Carbon::now('Asia/Ho_Chi_Minh');
+            $user->created_at = \Carbon\Carbon::now('Asia/Ho_Chi_Minh');
+            $user->updated_at = \Carbon\Carbon::now('Asia/Ho_Chi_Minh');
             $save = $user->save();
 
-			return response()->json(['success'=>'Added new records.']);
+            return response()->json(['success' => 'Added new records.']);
         }
 
 
-    	return response()->json(['error'=>$validator->errors()->all()]);
+        return response()->json(['error' => $validator->errors()->all()]);
     }
 
     /**
@@ -93,7 +93,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        
     }
 
     /**
@@ -104,7 +103,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $userEdit=User::find($id);
+        $userEdit = User::find($id);
         return view('admins.user.include.editUser', compact('userEdit'));
     }
 
@@ -117,24 +116,42 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user=user::find($request->get('id'));
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $namefile = $avatar->getClientOriginalName();
-            $url = 'storage/avatar/' . $namefile;
-            Storage::disk('public')->putFileAs('avatar', $avatar, $namefile);
-            $user->avatar=$url;
-        } else {
-            echo 'Lỗi';
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name'         => 'required|max:255|min:5',
+
+            ],
+            [
+                'required' => ':attribute Không được để trống',
+                'min' => ':attribute Không được nhỏ hơn :min ký tự',
+                'max' => ':attribute Không được lớn hơn :max ký tự',
+            ],
+
+        );
+        if ($validator->passes()) {
+            $user = user::find($request->get('id'));
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $namefile = $avatar->getClientOriginalName();
+                $url = 'storage/avatar/' . $namefile;
+                Storage::disk('public')->putFileAs('avatar', $avatar, $namefile);
+                $user->avatar = $url;
+            }
+
+
+            $user->name = $request->get('name');
+            $user->address = $request->get('address');
+            $user->password = bcrypt($request->get('password'));
+            $user->phone = $request->get('phone');
+            $user->updated_at = \Carbon\Carbon::now('Asia/Ho_Chi_Minh');
+            $save = $user->save();
+
+            return response()->json(['success' => 'Edit success.']);
         }
-        
-        
-        $user->name=$request->get('nameEdit');
-        $user->address=$request->get('address');
-        $user->password=bcrypt($request->get('passwordEdit'));
-        $user->phone=$request->get('phoneEdit');
-        $user->updated_at=\Carbon\Carbon::now('Asia/Ho_Chi_Minh');
-        $save=$user->save();
+
+
+        return response()->json(['error' => $validator->errors()->all()]);
     }
 
     /**
@@ -146,5 +163,11 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function deleteAT(Request $request)
+    {
+        $user = user::find($request->get('id'));
+        $user->deleted_at = \Carbon\Carbon::now('Asia/Ho_Chi_Minh');
+        $save = $user->save();
     }
 }
