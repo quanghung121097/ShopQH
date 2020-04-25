@@ -69,10 +69,17 @@
                 <li><a href="http://demo.flatlogic.com/3.1/white/index.html" data-no-pjax>White <sup class="text-warning fw-bold">new</sup></a></li>
             </ul>
         </li> -->
-        <li class="panel">
-            <a href="{{route('admin.user.index')}}"><i class="fa fa-home"></i> <span class="name">Thông tin khách hàng</span></a>
+        <li class="">
+            <a href="{{route('admin.user.index')}}"><i class="fa fa-user"></i> <span class="name">Thông tin khách hàng</span></a>
         </li>
         <li class="panel">
+            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#side-nav" href="#menu-levels-collapse"><i class="fa fa-folder-open"></i> <span class="name">Quản lý danh mục</span></a>
+            <ul id="menu-levels-collapse" class="panel-collapse collapse">
+                <li><a href="{{route('admin.category.index')}}">Danh sách</a></li>
+                
+            </ul>
+        </li>
+        <!-- <li class="panel">
             <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#side-nav" href="#menu-levels-collapse"><i class="fa fa-folder-open"></i> <span class="name">Menu Levels</span></a>
             <ul id="menu-levels-collapse" class="panel-collapse collapse">
                 <li><a href="#">Item 1.1</a></li>
@@ -100,7 +107,7 @@
                     </ul>
                 </li>
             </ul>
-        </li>
+        </li> -->
         
         <li class="visible-xs">
             <a href="login.html"><i class="fa fa-sign-out"></i> <span class="name">Sign Out</span></a>

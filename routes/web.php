@@ -29,5 +29,15 @@ Route::group([
     Route::delete('/destroy{id}', 'UserController@destroy')->name('admin.user.destroy');
     Route::get('/{user_id}', 'UserController@show')->name('admin.user.show');
   });
+  Route::group(['prefix' => 'categories'], function () {
+    Route::get('/', 'CategoryController@index')->name('admin.category.index');
+    Route::get('/create', 'CategoryController@create')->name('admin.category.create');
+    Route::post('/store', 'CategoryController@store')->name('admin.category.store');
+    Route::get('/edit/{id}', 'CategoryController@edit')->name('admin.category.edit');
+    Route::post('/update', 'CategoryController@update')->name('admin.category.update');
+    Route::post('/del', 'CategoryController@deleteAT')->name('admin.category.del');
+    Route::delete('/destroy{id}', 'CategoryController@destroy')->name('admin.category.destroy');
+    Route::get('/{id}', 'CategoryController@show')->name('admin.category.show');
+  });
 });
 Auth::routes();
