@@ -224,4 +224,61 @@ class ProductController extends Controller
         $product->deleted_at = \Carbon\Carbon::now('Asia/Ho_Chi_Minh');
         $save = $product->save();
     }
+    public function getListImg(Request $request, $slug)
+    {
+        $productAddImg = Product::where('slug', $slug)->first();
+        $images = Image::where('product_id', $productAddImg->id)->get();
+        return view('admins.product.include.listImgProduct', compact('images','productAddImg'));
+    }
+    public function uploadImg(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                
+                'images.*' => 'image|max:2000',
+                'images' => 'required',
+            ],
+            [
+                'required' => ':attribute Không được để trống',
+                'images.required' => ':attribute Không được để trống',
+                'max' => ':attribute Không được lớn hơn :max',
+                'image' => ':attribute Không đúng định dạng',
+                
+            ],
+            [
+                'images' => 'Ảnh sản phẩm',
+            ]
+
+        );
+        if ($validator->passes()) {
+            $info_img = [];
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                foreach ($images as $key => $image) {
+                    $namefile = $image->getClientOriginalName();
+                    $url = 'storage/products/' . $namefile;
+                    Storage::disk('public')->putFileAs('products', $image, $namefile);
+                    $info_img[] = [
+                        'url' => $url,
+                        'name' => $namefile
+                    ];
+                }
+            } else {
+                echo 'Lỗi upfile';
+            }
+            foreach ($info_img as $image) {
+                $img = new Image();
+                $img->name = $image['name'];
+                $img->path = $image['url'];
+                $img->product_id = $request->get('id');
+                $img->save();
+            }
+
+            return response()->json(['success' => 'Added new records.']);
+        }
+
+
+        return response()->json(['error' => $validator->errors()->all()]);
+    }
 }

@@ -22,6 +22,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th>Id sản phẩm</th>
                                 <th>Name</th>
                                 <th>Giá bán</th>
                                 <th>Số lượng</th>
@@ -35,7 +36,9 @@
 
                             @foreach($products as $key => $product)
                             <tr>
-
+                                <td>
+                                    {{$product->id}}
+                                </td>
                                 <td>
                                     {{$product->name}}
                                 </td>
@@ -62,9 +65,10 @@
                                     <button type="button" class="btn btn-success btnEditProduct" name="{{$product->id}}">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button type="button" class="btn btn-warning">
+                                    <button type="button" class="btn btn-warning editImg" name="{{$product->slug}}">
                                         <i class="fa fa-camera"></i>
                                     </button>
+
                                     <button type="button" data-toggle="modal" data-target="#exampleModalCenter-{{$product->id}}" class="btn btn-danger  ">
                                         <i class="fa fa-ban"></i>
                                     </button>
@@ -114,7 +118,7 @@
 <div class="modal-product-edit">
 
 </div>
-
+@include('admins.product.include.imageProduct')
 @endsection
 @section('js')
 <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
@@ -179,6 +183,7 @@
                 $(".print-error-msg").find("ul").append('<li>' + value + '</li>');
             });
         }
+        // edit product
         $('.btnEditProduct').on("click", function() {
 
             var id = $(this).attr('name');
@@ -249,6 +254,54 @@
                     alert('lỗi')
                 }
             });
+        })
+        // edit img product
+        $('.editImg').on('click', function() {
+
+            var slugProduct = $(this).attr('name');
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/admin/images/" + slugProduct + "",
+                success: function(datatheme) {
+                    $('.listTheme').html(datatheme);
+                    $('.addNewImg').click(function() {
+
+                        var formData = new FormData();
+                        var imageAddNew = document.getElementById('AddmultiFiles').files.length;
+                        formData.append('_token', $('input[name="_token"]').val());
+                        formData.append('id', $('input[name="idproduct"]').val());
+                        for (var i = 0; i < imageAddNew; i++) {
+                            formData.append("images[]", document.getElementById('AddmultiFiles').files[i]);
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "{{route('admin.image.uploadImgProduct')}}",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(data) {
+                                if ($.isEmptyObject(data.error)) {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "http://127.0.0.1:8000/admin/images/" + slugProduct + "",
+                                        success: function(datatheme) {
+                                            $('.listTheme').html(datatheme);
+                                        }
+                                    });
+                                } else {
+                                    printErrorMsg(data.error);
+                                }
+
+                            },
+                            error: function(error) {
+                                alert('lỗi')
+                            }
+                        });
+                    });
+                }
+            });
+            $('#imgEditModal').modal('show');
+
         })
     });
 </script>
