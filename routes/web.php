@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Auth::routes();
 Route::group([
   'namespace' => 'admin',
   'prefix' => 'admin',
@@ -39,5 +39,20 @@ Route::group([
     Route::delete('/destroy{id}', 'CategoryController@destroy')->name('admin.category.destroy');
     Route::get('/{id}', 'CategoryController@show')->name('admin.category.show');
   });
+  Route::group(['prefix' => 'products'], function(){
+    Route::get('/category/{slug}', 'ProductController@index')->name('admin.product.index');
+    Route::get('/create', 'ProductController@create')->name('admin.product.create');
+    Route::post('/store', 'ProductController@store')->name('admin.product.store');
+    Route::get('/edit/{id}', 'ProductController@edit')->name('admin.product.edit');
+    Route::get('/show/{id}', 'ProductController@show')->name('admin.product.show');
+    Route::post('/update', 'ProductController@update')->name('admin.product.update');
+    Route::post('/del', 'ProductController@deleteAT')->name('admin.product.del');
+    Route::delete('/destroy{id}', 'ProductController@destroy')->name('admin.product.destroy');
+    Route::get('/editimg/{id}', 'ProductController@editimg')->name('admin.product.editimg');
+    Route::get('/deleteimg/{id}/{product_id}', 'ProductController@deleteimg')->name('admin.product.deleteimg');
+    Route::get('/{id}', 'ProductController@show')->name('admin.product.show');
+    
+    
+  });
 });
-Auth::routes();
+

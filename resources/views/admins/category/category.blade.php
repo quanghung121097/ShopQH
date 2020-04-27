@@ -52,12 +52,11 @@
                                     <button type="button" class="btn btn-success btnEditCategory" name="{{$category->id}}">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button type="button" class="btn btn-warning">
-                                        <i class="fa fa-info"></i>
-                                    </button>
+                                    
                                     <button type="button" data-toggle="modal" data-target="#exampleModalCenter-{{$category->id}}" class="btn btn-danger  ">
                                         <i class="fa fa-ban"></i>
                                     </button>
+                                    <a class="btn btn-warning" href="{{route('admin.product.index',$category->slug)}}">Sản phẩm</a>
                                     <div class="modal fade" id="exampleModalCenter-{{$category->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
