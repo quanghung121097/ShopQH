@@ -34,14 +34,13 @@
     .listTheme {
         height: 400px;
         overflow-y: auto;
-        width: 99%;
+        width: 100%;
         background-color: white;
     }
 
     .titleTheme {
         width: 99%;
-        background-color: #F2F2F2;
-        color: #58ACFA;
+
         padding-left: 2%;
         padding-top: 10px;
         padding-bottom: 10px;
@@ -50,7 +49,7 @@
 
     .theme-all {
         width: 100%;
-        background-color: #FAFAFA;
+        
         position: relative;
         padding-left: 5%;
         padding-top: 1%;
@@ -65,7 +64,7 @@
 
             <div class="modal-body">
                 <div class="theme-all">
-                    <div class="titleTheme row"><span>Hình ảnh sản phẩm</span></div>
+                    <div class="titleTheme row"></div>
 
                     <div class="listTheme row">
 
@@ -73,11 +72,7 @@
                     
                 </div>
             </div>
-            <div class="modal-footer">
-
-                <button type="button" class="btn btn-danger">Xóa hình ảnh</button>
-                <div><i class=""></i></div>
-            </div>
+            
         </div>
     </div>
 </div>

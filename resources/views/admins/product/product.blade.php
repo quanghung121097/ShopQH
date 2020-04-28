@@ -264,40 +264,7 @@
                 url: "http://127.0.0.1:8000/admin/images/" + slugProduct + "",
                 success: function(datatheme) {
                     $('.listTheme').html(datatheme);
-                    $('.addNewImg').click(function() {
-
-                        var formData = new FormData();
-                        var imageAddNew = document.getElementById('AddmultiFiles').files.length;
-                        formData.append('_token', $('input[name="_token"]').val());
-                        formData.append('id', $('input[name="idproduct"]').val());
-                        for (var i = 0; i < imageAddNew; i++) {
-                            formData.append("images[]", document.getElementById('AddmultiFiles').files[i]);
-                        }
-                        $.ajax({
-                            type: "POST",
-                            url: "{{route('admin.image.uploadImgProduct')}}",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function(data) {
-                                if ($.isEmptyObject(data.error)) {
-                                    $.ajax({
-                                        type: "GET",
-                                        url: "http://127.0.0.1:8000/admin/images/" + slugProduct + "",
-                                        success: function(datatheme) {
-                                            $('.listTheme').html(datatheme);
-                                        }
-                                    });
-                                } else {
-                                    printErrorMsg(data.error);
-                                }
-
-                            },
-                            error: function(error) {
-                                alert('lỗi')
-                            }
-                        });
-                    });
+                    
                 }
             });
             $('#imgEditModal').modal('show');

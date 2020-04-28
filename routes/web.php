@@ -57,7 +57,7 @@ Route::group([
   Route::group(['prefix' => 'images'], function(){
     Route::get('/{slug}', 'ProductController@getListImg')->name('admin.image.products');
     Route::post('/uploadImgProduct', 'ProductController@uploadImg')->name('admin.image.uploadImgProduct');
-    
+    Route::post('/del', 'ProductController@deleteImg')->name('admin.image.del');
     
   });
 });

@@ -281,4 +281,8 @@ class ProductController extends Controller
 
         return response()->json(['error' => $validator->errors()->all()]);
     }
+    public function deleteImg(Request $request){
+        Storage::delete($request->get('name'));
+        Image::destroy($request->get('id'));
+    }
 }
